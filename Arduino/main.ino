@@ -68,6 +68,7 @@ void setup()
 void loop()
 {
   potVal = analogRead(potPin);
+  potVal = map(potVal, 0, 1023, 10, 180);
   lcd_show(1, 0, "Pot:" + String(potVal), 1);
   lcd_show(0, 1, "Address:" + String(address), 250);
 
@@ -113,7 +114,6 @@ void loop()
 void save_angle(int potVal)
 {
   int servoVal = potVal;
-  servoVal = map(servoVal, 0, 1023, 10, 180);
   EEPROM.write(address, servoVal);
   lcd_show(1, 0, "Save:" + String(servoVal) + " to:" + String(address), 1500);
 }
