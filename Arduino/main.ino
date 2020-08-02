@@ -32,12 +32,7 @@ const int LONG_PRESS_TIME = 1000;
 
 int address = 0;
 
-int angle1 = 0;
-int angle2 = 0;
-int angle3 = 0;
-int angle4 = 0;
-int angle5 = 0;
-int angle6 = 0;
+int potVal = 0;
 
 iquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -72,6 +67,9 @@ void setup()
 
 void loop()
 {
+  potVal = analogRead(potPin);
+  lcd_show(1, 0, "Pot:" + String(potVal), 100);
+
   upButton.loop();
   downButton.loop();
   saveButton.loop();
@@ -106,16 +104,16 @@ void loop()
     releasedTime = millis();
     long pressDuration = releasedTime - pressedTime;
     if (pressDuration < SHORT_PRESS_TIME)
-      save_angle();
+      save_angle(potVal);
 
     if (pressDuration > LONG_PRESS_TIME)
       load_angle();
   }
 }
 
-void save_angle()
+void save_angle(int potVal)
 {
-  int servoVal = analogRead(potPin);
+  int servoVal = potVal;
   servoVal = map(servoVal, 0, 1023, 10, 180);
   EEPROM.write(address, servoVal);
   lcd_show(1, 0, "Save:" + String(servoVal) + " to:" + String(address), 250);
