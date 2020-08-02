@@ -68,7 +68,8 @@ void setup()
 void loop()
 {
   potVal = analogRead(potPin);
-  lcd_show(1, 0, "Pot:" + String(potVal), 100);
+  lcd_show(1, 0, "Pot:" + String(potVal), 1);
+  lcd_show(0, 1, "Address:" + String(address), 250);
 
   upButton.loop();
   downButton.loop();
@@ -81,7 +82,6 @@ void loop()
     {
       address = 5;
     }
-    lcd_show(1, 0, "Address:" + String(address), 250);
   }
 
   if (downButton.isReleased())
@@ -91,7 +91,6 @@ void loop()
     {
       address = 0;
     }
-    lcd_show(1, 0, "Address:" + String(address), 250);
   }
 
   if (saveButton.isPressed())
@@ -116,7 +115,7 @@ void save_angle(int potVal)
   int servoVal = potVal;
   servoVal = map(servoVal, 0, 1023, 10, 180);
   EEPROM.write(address, servoVal);
-  lcd_show(1, 0, "Save:" + String(servoVal) + " to:" + String(address), 250);
+  lcd_show(1, 0, "Save:" + String(servoVal) + " to:" + String(address), 1500);
 }
 
 void load_angle()
@@ -152,7 +151,7 @@ void load_angle()
       break;
     }
 
-    delay(250);
+    delay(1000);
   }
 }
 
