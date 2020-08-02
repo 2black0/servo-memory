@@ -5,8 +5,7 @@
 
 #define potPin A0
 #define upBtnPin A1
-#define downBtnPin A2
-#define saveBtnPin A3
+#define saveBtnPin A2
 #define servo1Pin 8
 #define servo2Pin 9
 #define servo3Pin 10
@@ -22,7 +21,6 @@ Servo servo5;
 Servo servo6;
 
 ezButton upButton(upBtnPin);
-ezButton downButton(downBtnPin);
 ezButton saveButton(saveBtnPin);
 
 unsigned long pressedTime = 0;
@@ -73,22 +71,12 @@ void loop()
   lcd_show(0, 1, "Address:" + String(address), 250);
 
   upButton.loop();
-  downButton.loop();
   saveButton.loop();
 
   if (upButton.isReleased())
   {
     address++;
     if (address >= 5)
-    {
-      address = 5;
-    }
-  }
-
-  if (downButton.isReleased())
-  {
-    address--;
-    if (address <= 5)
     {
       address = 0;
     }
