@@ -33,7 +33,8 @@ unsigned long releasedTime = 0;
 const int SHORT_PRESS_TIME = 1000;
 const int LONG_PRESS_TIME = 1000;
 
-int address = 0;
+int addVal = 1;
+int recVal = 1;
 int potVal = 0;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -72,17 +73,36 @@ void loop()
   okButton.loop();
 
   potVal = analogRead(potPin);
-  potVal = map(potVal, 0, 1023, 10, 180);
-  lcd_show(1, 0, "Servo:" + String(int(address + 1)), 1);
-  lcd_show(0, 1, "Value:" + String(potVal), 50);
+  potVal = map(potVal, 0, 1023, 0, 180);
   servo_setting();
+  lcd_show(1, 0, "Rec:" + String(recVal) + " Servo:" + String(addVal), 1);
+  lcd_show(0, 1, "Val:" + String(potVal), 50);
+
+  if (upButton.isPressed())
+  {
+    pressedTime = millis();
+  }
 
   if (upButton.isReleased())
   {
-    address++;
-    if (address > 5)
+    releasedTime = millis();
+    long pressDuration = releasedTime - pressedTime;
+    if (pressDuration < SHORT_PRESS_TIME)
     {
-      address = 0;
+      addVal++;
+      if (addVal > 6)
+      {
+        addVal = 1;
+      }
+    }
+
+    if (pressDuration > LONG_PRESS_TIME)
+    {
+      recVal++;
+      if (recVal > 5)
+      {
+        recVal = 1;
+      }
     }
   }
 
@@ -117,7 +137,7 @@ void lcd_show(bool clear, int line, String text, int timedelay)
 
 void servo_setting()
 {
-  switch (int(address + 1))
+  switch (addVal)
   {
   case 1:
     servo1.write(potVal);
@@ -140,17 +160,18 @@ void servo_setting()
   }
 }
 
-void save_angle(int potVal)
+void save_angle()
 {
-  int servoVal = potVal;
-  EEPROM.write(address, servoVal);
-  lcd_show(1, 0, "Save:" + String(servoVal), 1);
-  lcd_show(0, 1, "Servo" + String(int(address + 1)), 1000);
+  int eeVal = addVal * recVal;
+  EEPROM.write(eeVal, potVal);
+  lcd_show(1, 0, "Save:" + String(potVal) + " to:" + String(eeVal), 1);
+  lcd_show(0, 1, "Rec:" + String(recVal) + " Servo" + String(addVal), 750);
 }
 
 void run_servo()
 {
   bool runStatus = true;
+  int count = 1;
   while (runStatus)
   {
     okButton.loop();
@@ -159,37 +180,44 @@ void run_servo()
       runStatus = false;
     }
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 1; i < 7; i++)
     {
-      int value = EEPROM.read(i + 1);
+      i = i * count;
+      int value = EEPROM.read(i);
       switch (i)
       {
       case 1:
         servo1.write(value);
-        lcd_show(1, 0, "Servo1 to:" + String(value), 250);
+        lcd_show(1, 0, "Rec:" + String(count), 1);
+        lcd_show(0, 1, "Servo1:" + String(value), 250);
         break;
       case 2:
         servo2.write(value);
-        lcd_show(1, 0, "Servo2 to:" + String(value), 250);
+        lcd_show(1, 0, "Rec:" + String(count), 1);
+        lcd_show(0, 1, "Servo2:" + String(value), 250);
         break;
       case 3:
         servo3.write(value);
-        lcd_show(1, 0, "Servo3 to:" + String(value), 250);
+        lcd_show(1, 0, "Rec:" + String(count), 1);
+        lcd_show(0, 1, "Servo3:" + String(value), 250);
         break;
       case 4:
         servo4.write(value);
-        lcd_show(1, 0, "Servo4 to:" + String(value), 250);
+        lcd_show(1, 0, "Rec:" + String(count), 1);
+        lcd_show(0, 1, "Servo4:" + String(value), 250);
         break;
       case 5:
         servo5.write(value);
-        lcd_show(1, 0, "Servo5 to:" + String(value), 250);
+        lcd_show(1, 0, "Rec:" + String(count), 1);
+        lcd_show(0, 1, "Servo5:" + String(value), 250);
         break;
       case 6:
         servo6.write(value);
-        lcd_show(1, 0, "Servo6 to:" + String(value), 250);
+        lcd_show(1, 0, "Rec:" + String(count), 1);
+        lcd_show(0, 1, "Servo6:" + String(value), 250);
         break;
       }
-
+      count++;
       delay(250);
     }
   }
