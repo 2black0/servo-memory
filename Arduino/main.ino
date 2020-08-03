@@ -36,7 +36,7 @@ const int LONG_PRESS_TIME = 1000;
 int address = 0;
 int potVal = 0;
 
-iquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void init_servo()
 {
@@ -57,7 +57,7 @@ void init_button()
 void setup()
 {
   Serial.begin(9600);
-  lcd.begin();
+  lcd.init();
   init_servo();
   init_button();
   delay(100);
