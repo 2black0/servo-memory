@@ -175,45 +175,41 @@ void run_servo()
   while (runStatus)
   {
     okButton.loop();
-    if (okButton.isPressed())
-    {
-      runStatus = false;
-    }
-
     for (int i = 1; i < 7; i++)
     {
+
+      if (okButton.isPressed())
+      {
+        runStatus = false;
+      }
+
       i = i * count;
       int value = EEPROM.read(i);
+      lcd_show(1, 0, "Rec:" + String(count), 1);
       switch (i)
       {
       case 1:
         servo1.write(value);
-        lcd_show(1, 0, "Rec:" + String(count), 1);
         lcd_show(0, 1, "Servo1:" + String(value), 250);
         break;
       case 2:
         servo2.write(value);
-        lcd_show(1, 0, "Rec:" + String(count), 1);
         lcd_show(0, 1, "Servo2:" + String(value), 250);
         break;
       case 3:
         servo3.write(value);
-        lcd_show(1, 0, "Rec:" + String(count), 1);
         lcd_show(0, 1, "Servo3:" + String(value), 250);
         break;
       case 4:
         servo4.write(value);
-        lcd_show(1, 0, "Rec:" + String(count), 1);
         lcd_show(0, 1, "Servo4:" + String(value), 250);
         break;
       case 5:
         servo5.write(value);
-        lcd_show(1, 0, "Rec:" + String(count), 1);
         lcd_show(0, 1, "Servo5:" + String(value), 250);
         break;
       case 6:
         servo6.write(value);
-        lcd_show(1, 0, "Rec:" + String(count), 1);
         lcd_show(0, 1, "Servo6:" + String(value), 250);
         break;
       }
