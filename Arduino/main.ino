@@ -116,7 +116,7 @@ void loop()
     releasedTime = millis();
     long pressDuration = releasedTime - pressedTime;
     if (pressDuration < SHORT_PRESS_TIME)
-      save_angle(potVal);
+      save_angle();
 
     if (pressDuration > LONG_PRESS_TIME)
       run_servo();
